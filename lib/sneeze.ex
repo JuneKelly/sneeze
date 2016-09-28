@@ -1,6 +1,10 @@
 defmodule Sneeze do
 
-  def render do
-    "wat"
+  def render(data) do
+    case data do
+      [] ->
+        ""
+    end
   end
+
 end
