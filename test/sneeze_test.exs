@@ -6,6 +6,14 @@ defmodule SneezeTest do
     assert 1 + 1 == 2
   end
 
+  test "just a string" do
+    assert Sneeze.render("wat") == "wat"
+  end
+
+  test "just a number" do
+    assert Sneeze.render(42) == "42"
+  end
+
   test "empty" do
     assert Sneeze.render([]) == ""
   end
