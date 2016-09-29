@@ -46,6 +46,16 @@ defmodule SneezeTest do
       "<ul><li>one</li><li>two</li></ul>"
   end
 
+  test "ul with li and a elements" do
+    data = [
+      :ul,
+      [:li, [:a, %{href: "x"}, "one"]],
+      [:li, [:a, %{href: "y"}, "two"]],
+    ]
+    assert Sneeze.render(data) ==
+      "<ul><li><a href=\"x\">one</a></li><li><a href=\"y\">two</a></li></ul>"
+  end
+
 end
 
 defmodule SneezeInternalTest do
