@@ -19,15 +19,15 @@ defmodule Sneeze do
         Internal.render_tag(tag, attributes)
 
       # list with tag, attribute map and child nodes
-      [tag, attributes | children] when is_map(attributes) ->
+      [tag, attributes | body] when is_map(attributes) ->
         Internal.render_opening_tag(tag, attributes)
-        <> _render(children)
+        <> _render(body)
         <> Internal.render_closing_tag(tag)
 
       # list with tag and child nodes
-      [tag | children] when is_atom(tag) ->
+      [tag | body] when is_atom(tag) ->
         Internal.render_opening_tag(tag)
-        <> _render(children)
+        <> _render(body)
         <> Internal.render_closing_tag(tag)
 
       # list with list of child nodes
