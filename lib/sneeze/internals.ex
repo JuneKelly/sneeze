@@ -1,4 +1,4 @@
-defmodule Sneeze.Internals do
+defmodule Sneeze.Internal do
 
   def attributes_to_string(attrib_map) do
     Enum.map(attrib_map, fn({k,v}) -> "#{k}=\"#{v}\"" end)

@@ -1,5 +1,5 @@
 defmodule Sneeze do
-  alias Sneeze.Internals
+  alias Sneeze.Internal
 
   def render(data) do
     _render(data)
@@ -10,9 +10,9 @@ defmodule Sneeze do
       [] ->
         ""
       [tag_name] ->
-        Internals.render_tag(tag_name)
+        Internal.render_tag(tag_name)
       [tag_name, attributes] when is_map(attributes) ->
-        Internals.render_tag(tag_name, attributes)
+        Internal.render_tag(tag_name, attributes)
       bare_node when not is_list(bare_node) ->
         to_string bare_node
       _ ->

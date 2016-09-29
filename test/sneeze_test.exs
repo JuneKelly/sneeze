@@ -33,38 +33,38 @@ defmodule SneezeTest do
 
 end
 
-defmodule SneezeInternalsTest do
+defmodule SneezeInternalTest do
   use ExUnit.Case
-  doctest Sneeze.Internals
+  doctest Sneeze.Internal
 
-  alias Sneeze.Internals
+  alias Sneeze.Internal
 
   test "create attribute string from map" do
-    assert Internals.attributes_to_string(%{class: "foo", id: "bar"}) ==
+    assert Internal.attributes_to_string(%{class: "foo", id: "bar"}) ==
       "class=\"foo\" id=\"bar\""
   end
 
   test "empty attributes" do
-    assert Internals.attributes_to_string(%{}) ==
+    assert Internal.attributes_to_string(%{}) ==
       ""
   end
 
   test "opening tag" do
-    assert Internals.render_opening_tag(:p) ==
+    assert Internal.render_opening_tag(:p) ==
       "<p>"
-    assert Internals.render_opening_tag(:p, %{class: "greeting"}) ==
+    assert Internal.render_opening_tag(:p, %{class: "greeting"}) ==
       "<p class=\"greeting\">"
   end
 
   test "closing tag" do
-    assert Internals.render_closing_tag(:p) ==
+    assert Internal.render_closing_tag(:p) ==
       "</p>"
   end
 
   test "self-closing tag" do
-    assert Internals.render_self_closing_tag(:br) ==
+    assert Internal.render_self_closing_tag(:br) ==
       "<br />"
-    assert Internals.render_self_closing_tag(:br, %{class: "foo"}) ==
+    assert Internal.render_self_closing_tag(:br, %{class: "foo"}) ==
       "<br class=\"foo\" />"
   end
 
