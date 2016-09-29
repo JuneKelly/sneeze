@@ -13,7 +13,7 @@ defmodule Sneeze do
       # list with tag
       [tag] when is_atom(tag) ->
         if Enum.member?(Internal.void_tags, tag) do
-          Internal.render_self_closing_tag(tag)
+          Internal.render_void_tag(tag)
         else
           Internal.render_tag(tag)
         end
@@ -21,7 +21,7 @@ defmodule Sneeze do
       # list with tag and attribute map
       [tag, attributes] when is_atom(tag) and is_map(attributes) ->
         if Enum.member?(Internal.void_tags, tag) do
-          Internal.render_self_closing_tag(tag, attributes)
+          Internal.render_void_tag(tag, attributes)
         else
           Internal.render_tag(tag, attributes)
         end
@@ -29,7 +29,7 @@ defmodule Sneeze do
       # list with tag, attribute map and child nodes
       [tag, attributes | body] when is_map(attributes) ->
         if Enum.member?(Internal.void_tags, tag) do
-          Internal.render_self_closing_tag(tag, attributes)
+          Internal.render_void_tag(tag, attributes)
           <> _render(body)  # not actually body, next elements
         else
           Internal.render_opening_tag(tag, attributes)
@@ -40,7 +40,7 @@ defmodule Sneeze do
       # list with tag and child nodes
       [tag | body] when is_atom(tag) ->
         if Enum.member?(Internal.void_tags, tag) do
-          Internal.render_self_closing_tag(tag)
+          Internal.render_void_tag(tag)
           <> _render(body)  # not actually body, next elements
         else
           Internal.render_opening_tag(tag)

@@ -107,9 +107,9 @@ defmodule SneezeInternalTest do
   end
 
   test "self-closing tag" do
-    assert Internal.render_self_closing_tag(:br) ==
+    assert Internal.render_void_tag(:br) ==
       "<br />"
-    assert Internal.render_self_closing_tag(:br, %{class: "foo"}) ==
+    assert Internal.render_void_tag(:br, %{class: "foo"}) ==
       "<br class=\"foo\" />"
   end
 
