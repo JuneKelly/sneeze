@@ -1,6 +1,15 @@
 # Sneeze
 
-A port of hiccup to Elixir.
+Render Elixir data-structures to HTML. Inspired by [Hiccup](https://github.com/weavejester/hiccup).
+
+
+## Examples
+
+```elixir
+Sneeze.render([:p %{class: "greeting"} "hello world"])
+# => "<p class=\"greeting\">hello world</p>"
+```
+
 
 ## Installation
 
