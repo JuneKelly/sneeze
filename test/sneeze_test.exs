@@ -36,14 +36,14 @@ defmodule SneezeTest do
       "<p class=\"foo\">hello world</p>"
   end
 
-  test "ul with li elements" do
+  test "ul with id, and li elements" do
     data = [
-      :ul,
+      :ul, %{id: "my-list"},
       [:li, "one"],
       [:li, "two"]
     ]
     assert Sneeze.render(data) ==
-      "<ul><li>one</li><li>two</li></ul>"
+      "<ul id=\"my-list\"><li>one</li><li>two</li></ul>"
   end
 
   test "ul with li and a elements" do
