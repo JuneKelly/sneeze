@@ -26,6 +26,26 @@ defmodule SneezeTest do
       "<p></p>"
   end
 
+  test "br tag" do
+    assert Sneeze.render([:br]) ==
+      "<br />"
+  end
+
+  test "br tag with id" do
+    assert Sneeze.render([:br, %{id: "why-would-a-br-have-an-id"}]) ==
+      "<br id=\"why-would-a-br-have-an-id\" />"
+  end
+
+  test "two p and a br" do
+    assert Sneeze.render([[:p], [:br], [:p]]) ==
+      "<p></p><br /><p></p>"
+  end
+
+  test "p with a br and span inside" do
+    assert Sneeze.render([:p, %{class: "wrapper"}, :br, :p]) ==
+      "<p class=\"wrapper\"><br /><p></p></p>"
+  end
+
   test "empty p tag with class" do
     assert Sneeze.render([:p, %{class: "foo"}]) ==
       "<p class=\"foo\"></p>"

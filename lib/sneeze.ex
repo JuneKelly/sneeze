@@ -12,23 +12,41 @@ defmodule Sneeze do
 
       # list with tag
       [tag] when is_atom(tag) ->
-        Internal.render_tag(tag)
+        if Enum.member?(Internal.void_tags, tag) do
+          Internal.render_self_closing_tag(tag)
+        else
+          Internal.render_tag(tag)
+        end
 
       # list with tag and attribute map
       [tag, attributes] when is_atom(tag) and is_map(attributes) ->
-        Internal.render_tag(tag, attributes)
+        if Enum.member?(Internal.void_tags, tag) do
+          Internal.render_self_closing_tag(tag, attributes)
+        else
+          Internal.render_tag(tag, attributes)
+        end
 
       # list with tag, attribute map and child nodes
       [tag, attributes | body] when is_map(attributes) ->
-        Internal.render_opening_tag(tag, attributes)
-        <> _render(body)
-        <> Internal.render_closing_tag(tag)
+        if Enum.member?(Internal.void_tags, tag) do
+          Internal.render_self_closing_tag(tag, attributes)
+          <> _render(body)  # not actually body, next elements
+        else
+          Internal.render_opening_tag(tag, attributes)
+          <> _render(body)
+          <> Internal.render_closing_tag(tag)
+        end
 
       # list with tag and child nodes
       [tag | body] when is_atom(tag) ->
-        Internal.render_opening_tag(tag)
-        <> _render(body)
-        <> Internal.render_closing_tag(tag)
+        if Enum.member?(Internal.void_tags, tag) do
+          Internal.render_self_closing_tag(tag)
+          <> _render(body)  # not actually body, next elements
+        else
+          Internal.render_opening_tag(tag)
+          <> _render(body)
+          <> Internal.render_closing_tag(tag)
+        end
 
       # list with list of child nodes
       [node] when is_list(node) ->
