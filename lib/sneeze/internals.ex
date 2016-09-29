@@ -26,5 +26,12 @@ defmodule Sneeze.Internals do
     "<#{tag_name} #{attrib_string} />"
   end
 
+  def render_tag(tag) do
+    render_opening_tag(tag) <> render_closing_tag(tag)
+  end
+
+  def render_tag(tag, attributes) do
+    render_opening_tag(tag, attributes) <> render_closing_tag(tag)
+  end
 
 end

@@ -10,9 +10,14 @@ defmodule SneezeTest do
     assert Sneeze.render([]) == ""
   end
 
-  # test "really simple render" do
-  #   assert Sneeze.render([:p, %{class: "greeting" }"hello"]) == "<p class=\"greeting\">hello</p>"
-  # end
+  test "empty p tag" do
+    assert Sneeze.render([:p]) == "<p></p>"
+  end
+
+  test "empty p tag with class" do
+    assert Sneeze.render([:p, %{class: "foo"}]) == "<p class=\"foo\"></p>"
+  end
+
 end
 
 defmodule SneezeInternalsTest do
