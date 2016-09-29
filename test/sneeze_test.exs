@@ -31,6 +31,21 @@ defmodule SneezeTest do
       "<p class=\"foo\"></p>"
   end
 
+  test "p tag with class and text" do
+    assert Sneeze.render([:p, %{class: "foo"}, "hello world"]) ==
+      "<p class=\"foo\">hello world</p>"
+  end
+
+  test "ul with li elements" do
+    data = [
+      :ul,
+      [:li, "one"],
+      [:li, "two"]
+    ]
+    assert Sneeze.render(data) ==
+      "<ul><li>one</li><li>two</li></ul>"
+  end
+
 end
 
 defmodule SneezeInternalTest do
