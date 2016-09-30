@@ -11,6 +11,10 @@ defmodule SneezeTest do
       "wat"
   end
 
+  test "escape some html" do
+    assert Sneeze.render("<a>derp</a>") == "&lt;a&gt;derp&lt;/a&gt;"
+  end
+
   test "just a number" do
     assert Sneeze.render(42) ==
       "42"
