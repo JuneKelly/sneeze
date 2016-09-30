@@ -58,11 +58,11 @@ defmodule Sneeze do
 
       # list with single, stringible member
       [node] ->
-        to_string node
+        to_string(node) |> HtmlEntities.encode
 
       # any non-list node
       bare_node ->
-        to_string bare_node
+        to_string(bare_node) |> HtmlEntities.encode
 
     end
   end
