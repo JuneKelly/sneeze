@@ -9,11 +9,13 @@ defmodule Sneeze do
   #   - [tag, attribute_map | body]
   #   - [tag, attribute_map]
   #   - [tag, body]
-  #   - [tag]
-  #   - %RawHtml{html: h}
+  #   - [tag] x
+  #   - [:@raw_html, html_string]
+  #   - []
   #   - bare_stringy_node
   defp _render(data) do
     case data do
+
       [] ->
         ""
 
