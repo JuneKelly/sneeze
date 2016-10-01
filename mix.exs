@@ -5,6 +5,8 @@ defmodule Sneeze.Mixfile do
     [app: :sneeze,
      version: "0.2.0",
      elixir: "~> 1.3",
+     description: "Render Elixir data to HTML. Inspired by Hiccup."
+     package: package(),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
@@ -28,5 +30,12 @@ defmodule Sneeze.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:html_entities, "~> 0.3"}]
+  end
+
+  defp package do
+    [name: :sneeze,
+     maintainers: ["Shane Kilkelly"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => "https://github.com/ShaneKilkelly/sneeze"}]
   end
 end
