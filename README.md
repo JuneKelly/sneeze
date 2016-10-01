@@ -2,6 +2,7 @@
 
 Render Elixir data-structures to HTML. Inspired by [Hiccup](https://github.com/weavejester/hiccup).
 
+[![CircleCI](https://circleci.com/gh/ShaneKilkelly/sneeze.svg?style=shield)](https://circleci.com/gh/ShaneKilkelly/sneeze)
 
 ## Examples
 
