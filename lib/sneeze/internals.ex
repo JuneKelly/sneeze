@@ -6,6 +6,10 @@ defmodule Sneeze.Internal do
      :source, :track, :wbr]
   end
 
+  def is_void_tag?(tag) do
+    Enum.member? void_tags(), tag
+  end
+
   def attributes_to_string(attrib_map) do
     Enum.map(attrib_map, fn({k,v}) -> "#{k}=\"#{v}\"" end)
     |> Enum.join(" ")
