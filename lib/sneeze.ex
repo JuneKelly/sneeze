@@ -1,6 +1,5 @@
 defmodule Sneeze do
   alias Sneeze.Internal
-  alias Sneeze.RawHtml
 
   def render(data) do
     _render(data)
