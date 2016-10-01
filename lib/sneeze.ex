@@ -1,10 +1,18 @@
 defmodule Sneeze do
   alias Sneeze.Internal
+  alias Sneeze.RawHtml
 
   def render(data) do
     _render(data)
   end
 
+  # An element is either:
+  #   - [tag, attribute_map | body]
+  #   - [tag, attribute_map]
+  #   - [tag, body]
+  #   - [tag]
+  #   - %RawHtml{html: h}
+  #   - bare_stringy_node
   defp _render(data) do
     case data do
       [] ->

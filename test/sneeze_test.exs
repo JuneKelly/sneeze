@@ -46,7 +46,7 @@ defmodule SneezeTest do
   end
 
   test "p with a br and span inside" do
-    assert Sneeze.render([:p, %{class: "wrapper"}, :br, :p]) ==
+    assert Sneeze.render([:p, %{class: "wrapper"}, [:br], [:p]]) ==
       "<p class=\"wrapper\"><br /><p></p></p>"
   end
 
@@ -61,24 +61,31 @@ defmodule SneezeTest do
   end
 
   test "ul with id, and li elements" do
-    data = [
-      :ul, %{id: "my-list"},
-      [:li, "one"],
-      [:li, "two"]
-    ]
+    data = [:ul, %{id: "my-list"},
+            [:li, "one"],
+            [:li, "two"]]
     assert Sneeze.render(data) ==
       "<ul id=\"my-list\"><li>one</li><li>two</li></ul>"
   end
 
   test "ul with li and a elements" do
-    data = [
-      :ul,
-      [:li, [:a, %{href: "x"}, "one"]],
-      [:li, [:a, %{href: "y"}, "two"]],
-    ]
+    data = [:ul,
+            [:li, [:a, %{href: "x"}, "one"]],
+            [:li, [:a, %{href: "y"}, "two"]]]
     assert Sneeze.render(data) ==
       "<ul><li><a href=\"x\">one</a></li><li><a href=\"y\">two</a></li></ul>"
   end
+
+  # test "p with embedded raw html" do
+  #   data = [
+  #     :p, %{id: "wat"},
+  #     :br,
+  #     %Sneeze.RawHtml{html: "<span>test</span>"},
+  #     :br
+  #   ]
+  #   assert Sneeze.render(data) ==
+  #     "<p id=\"wat\"><br /><span>test</span></p>"
+  # end
 
 end
 
