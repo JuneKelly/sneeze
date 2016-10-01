@@ -33,6 +33,9 @@ defmodule Sneeze do
           Internal.render_tag(tag, attributes)
         end
 
+      [:__@raw_html, html_string] ->
+        html_string
+
       # list with tag, attribute map and child nodes
       [tag, attributes | body] when is_map(attributes) ->
         if Internal.is_void_tag?(tag) do

@@ -76,16 +76,16 @@ defmodule SneezeTest do
       "<ul><li><a href=\"x\">one</a></li><li><a href=\"y\">two</a></li></ul>"
   end
 
-  # test "p with embedded raw html" do
-  #   data = [
-  #     :p, %{id: "wat"},
-  #     :br,
-  #     %Sneeze.RawHtml{html: "<span>test</span>"},
-  #     :br
-  #   ]
-  #   assert Sneeze.render(data) ==
-  #     "<p id=\"wat\"><br /><span>test</span></p>"
-  # end
+  test "p with embedded raw html" do
+    data = [
+      :p, %{id: "wat"},
+      [:br],
+      [:__@raw_html, "<span>test</span>"],
+      [:br]
+    ]
+    assert Sneeze.render(data) ==
+      "<p id=\"wat\"><br /><span>test</span><br /></p>"
+  end
 
 end
 
