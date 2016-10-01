@@ -18,6 +18,7 @@ defmodule Sneeze.Internal do
   def render_opening_tag(tag_name) do
     "<#{tag_name}>"
   end
+
   def render_opening_tag(tag_name, attribs) do
     attrib_string = attributes_to_string(attribs)
     "<#{tag_name} #{attrib_string}>"

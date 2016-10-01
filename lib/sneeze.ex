@@ -5,6 +5,12 @@ defmodule Sneeze do
     _render(data)
   end
 
+  defp _render_body(body_elements) do
+    body_elements
+    |> Enum.map(&_render/1)
+    |> Enum.join("")
+  end
+
   # An element is either:
   #   - [tag, attribute_map | body]
   #   - [tag, attribute_map]
@@ -45,7 +51,7 @@ defmodule Sneeze do
           <> _render(body)  # not actually body, next elements
         else
           Internal.render_opening_tag(tag, attributes)
-          <> _render(body)
+          <> _render_body(body)
           <> Internal.render_closing_tag(tag)
         end
 
@@ -53,10 +59,10 @@ defmodule Sneeze do
       [tag | body] when is_atom(tag) ->
         if Internal.is_void_tag?(tag) do
           Internal.render_void_tag(tag)
-          <> _render(body)  # not actually body, next elements
+          <> _render_body(body)  # not actually body, next elements
         else
           Internal.render_opening_tag(tag)
-          <> _render(body)
+          <> _render_body(body)
           <> Internal.render_closing_tag(tag)
         end
 

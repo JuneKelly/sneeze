@@ -45,14 +45,14 @@ defmodule SneezeTest do
       "<p></p><br /><p></p>"
   end
 
-  # test "p with a bare :br inside, should render ':br'" do
-  #   assert Sneeze.render([:p, %{class: "wrapper"}, :br]) ==
-  #     "<p class=\"wrapper\">:br</p>"
-  # end
+  test "p with two bare :br's inside, should render 'brbr'" do
+    assert Sneeze.render([:p, %{class: "wrapper"}, :br, :br]) ==
+      "<p class=\"wrapper\">brbr</p>"
+  end
 
   test "p with a br and span inside" do
-    assert Sneeze.render([:p, %{class: "wrapper"}, [:br], [:p]]) ==
-      "<p class=\"wrapper\"><br /><p></p></p>"
+    assert Sneeze.render([:p, %{class: "wrapper"}, [:br], [:br], [:p]]) ==
+      "<p class=\"wrapper\"><br /><br /><p></p></p>"
   end
 
   test "empty p tag with class" do
