@@ -15,7 +15,7 @@ defmodule Sneeze do
   #   - [tag, attribute_map | body]
   #   - [tag, attribute_map]
   #   - [tag, body]
-  #   - [tag] x
+  #   - [tag]
   #   - [:@raw_html, html_string]
   #   - []
   #   - bare_stringy_node
