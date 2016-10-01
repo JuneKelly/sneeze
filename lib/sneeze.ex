@@ -19,6 +19,18 @@ defmodule Sneeze do
   #   - [:@raw_html, html_string]
   #   - []
   #   - bare_stringy_node
+
+  @doc ~s"""
+  Render a data-structure to html.
+  An element is either:
+    - [tag, attribute_map | body]
+    - [tag, attribute_map]
+    - [tag, body]
+    - [tag]
+    - [:@__raw_html, html_string]
+    - bare_stringy_node
+  Example: render([:p, %{class: "outlined"}, "hello"])
+  """
   defp _render(data) do
     case data do
 

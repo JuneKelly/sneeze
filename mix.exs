@@ -29,7 +29,8 @@ defmodule Sneeze.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:html_entities, "~> 0.3"}]
+    [{:html_entities, "~> 0.3"},
+     {:ex_doc, ">= 0.14.1", only: :dev}]
   end
 
   defp package do
