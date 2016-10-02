@@ -30,6 +30,23 @@ defmodule SneezeTest do
       "<p></p>"
   end
 
+  test "a sequence of tags" do
+    assert Sneeze.render([[:p, %{class: "a"}], [:p, %{class: "b"}]]) ==
+      "<p class=\"a\"></p><p class=\"b\"></p>"
+  end
+
+  test "a html document" do
+    data = [
+      [:__@raw_html, "<!DOCTYPE html>"],
+      [:head,
+       [:title, "wat"]],
+      [:body,
+       [:div, "hello"]]
+    ]
+    assert Sneeze.render(data) ==
+      "<!DOCTYPE html><head><title>wat</title></head><body><div>hello</div></body>"
+  end
+
   test "br tag" do
     assert Sneeze.render([:br]) ==
       "<br />"
