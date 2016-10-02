@@ -41,10 +41,11 @@ defmodule SneezeTest do
       [:head,
        [:title, "wat"]],
       [:body,
-       [:div, "hello"]]
+       [:div, %{id: "main-content"}, "hello"]]
     ]
     assert Sneeze.render(data) ==
-      "<!DOCTYPE html><head><title>wat</title></head><body><div>hello</div></body>"
+      "<!DOCTYPE html><head><title>wat</title></head>"
+      <> "<body><div id=\"main-content\">hello</div></body>"
   end
 
   test "br tag" do

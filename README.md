@@ -41,6 +41,15 @@ Sneeze.render(
    [:li, [:a, %{href: "/contact"}, "Contact"]]]
 )
 # => <ul class="super-cool-list"><li><a href="/">Home</a></li>...</ul
+
+Sneeze.render([
+  [:__@raw_html, "<!DOCTYPE html>"],
+  [:head,
+   [:title, "wat"]],
+  [:body,
+   [:div, %{id: "main-content"}, "hello"]]
+]
+# => <!DOCTYPE html><head><title>wat</title></head><body><div id="main-content">hello</div></body>
 ```
 
 
