@@ -1,36 +1,30 @@
 defmodule Sneeze do
   alias Sneeze.Internal
 
+  @doc ~s"""
+  Render a data-structure, containing 'elements' to html.
+  An element is either:
+  - [tag, attribute_map | body]
+  - [tag, attribute_map]
+  - [tag | body]
+  - [tag]
+  - [:@__raw_html, html_string]
+  - A bare, stringable value (such as a string or number)
+  - A list of elements
+  Examples:
+  ```
+  render([:p, %{class: "outlined"}, "hello"])
+  render([:br])
+  render([[:span, "one"], [:span, "two"]])
+  render([:ul, %{id: "some-list"},
+  [:li, [:a, %{href: "/"},      "Home"]],
+  [:li, [:a, %{href: "/about"}, "About"]]])
+  ```
+  """
   def render(data) do
     _render(data)
   end
 
-  defp _render_body(body_elements) do
-    body_elements
-    |> Enum.map(&_render/1)
-    |> Enum.join("")
-  end
-
-  # An element is either:
-  #   - [tag, attribute_map | body]
-  #   - [tag, attribute_map]
-  #   - [tag, body]
-  #   - [tag]
-  #   - [:@raw_html, html_string]
-  #   - []
-  #   - bare_stringy_node
-
-  @doc ~s"""
-  Render a data-structure to html.
-  An element is either:
-    - [tag, attribute_map | body]
-    - [tag, attribute_map]
-    - [tag, body]
-    - [tag]
-    - [:@__raw_html, html_string]
-    - bare_stringy_node
-  Example: render([:p, %{class: "outlined"}, "hello"])
-  """
   defp _render(data) do
     case data do
 
@@ -95,6 +89,12 @@ defmodule Sneeze do
         to_string(bare_node) |> HtmlEntities.encode
 
     end
+  end
+
+  defp _render_body(body_elements) do
+    body_elements
+    |> Enum.map(&_render/1)
+    |> Enum.join("")
   end
 
 end
