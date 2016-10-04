@@ -66,6 +66,10 @@ def deps do
 end
 ```
 
+## Documentation
+
+Documentation can be found on [hexdocs](https://hexdocs.pm/sneeze/).
+
 
 ## Demo App
 
