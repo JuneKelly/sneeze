@@ -62,7 +62,7 @@ Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
 
 ```elixir
 def deps do
-  [{:sneeze, "~> 0.2.0"}]
+  [{:sneeze, "~> 1.0.0"}]
 end
 ```
 
