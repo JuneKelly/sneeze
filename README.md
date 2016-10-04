@@ -36,9 +36,12 @@ Sneeze.render([:div, [:__@raw_html, "<span>totally not escaped</span>"]])
 
 Sneeze.render(
   [:ul, %{class: "super-cool-list"},
-   [:li, [:a, %{href: "/"},        "Home"]],
-   [:li, [:a, %{href: "/about"},   "About"]],
-   [:li, [:a, %{href: "/contact"}, "Contact"]]]
+   [:li,
+    [:a, %{href: "/"},        "Home"]],
+   [:li,
+    [:a, %{href: "/about"},   "About"]],
+   [:li,
+    [:a, %{href: "/contact"}, "Contact"]]]
 )
 # => <ul class="super-cool-list"><li><a href="/">Home</a></li>...</ul
 
@@ -62,6 +65,11 @@ def deps do
   [{:sneeze, "~> 0.2.0"}]
 end
 ```
+
+
+## Demo App
+
+See [cold](https://github.com/ShaneKilkelly/cold-sneeze) for a demo of how to use Sneeze with Plug.
 
 
 ## Bugs, Improvements and Contributing
