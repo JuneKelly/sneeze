@@ -23,10 +23,12 @@ defmodule Sneeze do
   ```
   render([:p, %{class: "outlined"}, "hello"])
   render([:br])
-  render([[:span, "one"], [:span, "two"]])
+  render([[:span, "one"], [:span, %{class: "highlight"}, "two"]])
   render([:ul, %{id: "some-list"},
-  [:li, [:a, %{href: "/"},      "Home"]],
-  [:li, [:a, %{href: "/about"}, "About"]]])
+          [:li, [:a, %{href: "/"},      "Home"]],
+          [:li, [:a, %{href: "/about"}, "About"]]])
+  render([:__@raw_html, "<!DOCTYPE html>"])
+  render([:script, "console.log(42 < 9);"])
   ```
   """
   def render(data) do
