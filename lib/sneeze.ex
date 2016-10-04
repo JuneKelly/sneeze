@@ -9,8 +9,16 @@ defmodule Sneeze do
   - [tag | body]
   - [tag]
   - [:@__raw_html, html_string]
+  - [:script, attribute_map, script_text]
+  - [:script, script_text]
+  - [:style, attribute_map, style_text]
+  - [:style, style_text]
   - A bare, stringable value (such as a string or number)
   - A list of elements
+
+  The content of `:__@raw_html`, `:style` and `:script` elements will not be escaped.
+  All other elements content will be html-escaped.
+
   Examples:
   ```
   render([:p, %{class: "outlined"}, "hello"])
@@ -38,6 +46,28 @@ defmodule Sneeze do
         else
           Internal.render_tag(tag)
         end
+
+      # script tags
+      [:script, attributes, script_body] when is_map(attributes) ->
+        Internal.render_opening_tag(:script, attributes)
+        <> script_body
+        <> Internal.render_closing_tag(:script)
+
+      [:script, script_body] ->
+        Internal.render_opening_tag(:script)
+        <> script_body
+        <> Internal.render_closing_tag(:script)
+
+      # style tags
+      [:style, attributes, style_body] when is_map(attributes) ->
+        Internal.render_opening_tag(:style, attributes)
+        <> style_body
+        <> Internal.render_closing_tag(:style)
+
+      [:style, style_body] ->
+        Internal.render_opening_tag(:style)
+        <> style_body
+        <> Internal.render_closing_tag(:style)
 
       # list with tag and attribute map
       [tag, attributes] when is_atom(tag) and is_map(attributes) ->

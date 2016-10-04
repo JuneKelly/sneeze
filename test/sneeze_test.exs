@@ -110,6 +110,18 @@ defmodule SneezeTest do
       "<p id=\"wat\"><br /><span>test</span><br /></p>"
   end
 
+  test "a script tag" do
+    data = [:script, "console.log(42 < 9);"]
+    assert Sneeze.render(data) ==
+      "<script>console.log(42 < 9);</script>"
+  end
+
+  test "a style tag" do
+    data = [:style, ".foo > .bar { color: pink; }"]
+    assert Sneeze.render(data) ==
+      "<style>.foo > .bar { color: pink; }</style>"
+  end
+
 end
 
 defmodule SneezeInternalTest do
