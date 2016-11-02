@@ -55,6 +55,8 @@ Sneeze.render([
 # => <!DOCTYPE html><head><title>wat</title></head><body><div id="main-content">hello</div></body>
 ```
 
+If you're using sneeze and getting surprising/screwy results, please [open an issue](https://github.com/ShaneKilkelly/sneeze/issues).
+
 
 ## Installation
 
