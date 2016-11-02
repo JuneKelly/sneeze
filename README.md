@@ -4,6 +4,18 @@ Render Elixir data-structures to HTML. Inspired by [Hiccup](https://github.com/w
 
 [![CircleCI](https://circleci.com/gh/ShaneKilkelly/sneeze.svg?style=shield)](https://circleci.com/gh/ShaneKilkelly/sneeze)
 
+
+## Installation
+
+Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
+
+```elixir
+def deps do
+  [{:sneeze, "~> 1.0.0"}]
+end
+```
+
+
 ## Usage
 
 The `Sneeze.render/1` function will render a list of 'nodes' to html. A node can be any of:
@@ -57,16 +69,6 @@ Sneeze.render([
 
 If you're using sneeze and getting surprising/screwy results, please [open an issue](https://github.com/ShaneKilkelly/sneeze/issues).
 
-
-## Installation
-
-Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
-
-```elixir
-def deps do
-  [{:sneeze, "~> 1.0.0"}]
-end
-```
 
 ## Documentation
 
