@@ -3,7 +3,7 @@ defmodule Sneeze.Mixfile do
 
   def project do
     [app: :sneeze,
-     version: "1.0.0",
+     version: "1.0.1",
      elixir: "~> 1.3",
      description: "Render Elixir data to HTML. Inspired by Hiccup.",
      package: package(),
@@ -29,7 +29,7 @@ defmodule Sneeze.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:html_entities, "~> 0.3"},
+    [{:html_entities, "~> 0.4"},
      {:ex_doc, ">= 0.14.1", only: :dev}]
   end
 
