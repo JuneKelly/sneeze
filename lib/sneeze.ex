@@ -32,93 +32,94 @@ defmodule Sneeze do
   ```
   """
   def render(data) do
-    _render(data)
+    # _render(data)
+    IO.iodata_to_binary(_render(data))
   end
 
   defp _render(data) do
     case data do
 
       [] ->
-        ""
+        []
 
       # list with tag
       [tag] when is_atom(tag) ->
         if Internal.is_void_tag?(tag) do
-          Internal.render_void_tag(tag)
+          [Internal.render_void_tag(tag)]
         else
-          Internal.render_tag(tag)
+          [Internal.render_tag(tag)]
         end
 
       # script tags
       [:script, attributes, script_body] when is_map(attributes) ->
-        Internal.render_opening_tag(:script, attributes)
-        <> script_body
-        <> Internal.render_closing_tag(:script)
+        [Internal.render_opening_tag(:script, attributes),
+         script_body,
+         Internal.render_closing_tag(:script)]
 
       [:script, script_body] ->
-        Internal.render_opening_tag(:script)
-        <> script_body
-        <> Internal.render_closing_tag(:script)
+        [Internal.render_opening_tag(:script),
+         script_body,
+         Internal.render_closing_tag(:script)]
 
       # style tags
       [:style, attributes, style_body] when is_map(attributes) ->
-        Internal.render_opening_tag(:style, attributes)
-        <> style_body
-        <> Internal.render_closing_tag(:style)
+        [Internal.render_opening_tag(:style, attributes),
+         style_body,
+         Internal.render_closing_tag(:style)]
 
       [:style, style_body] ->
-        Internal.render_opening_tag(:style)
-        <> style_body
-        <> Internal.render_closing_tag(:style)
+        [Internal.render_opening_tag(:style),
+         style_body,
+         Internal.render_closing_tag(:style)]
 
       # list with tag and attribute map
       [tag, attributes] when is_atom(tag) and is_map(attributes) ->
         if Internal.is_void_tag?(tag) do
-          Internal.render_void_tag(tag, attributes)
+          [Internal.render_void_tag(tag, attributes)]
         else
-          Internal.render_tag(tag, attributes)
+          [Internal.render_tag(tag, attributes)]
         end
 
       [:__@raw_html, html_string] ->
-        html_string
+        [html_string]
 
       # list with tag, attribute map and child nodes
       [tag, attributes | body] when is_map(attributes) ->
         if Internal.is_void_tag?(tag) do
-          Internal.render_void_tag(tag, attributes)
-          <> _render(body)  # not actually body, next elements
+          [Internal.render_void_tag(tag, attributes),
+           _render(body)]  # not actually body, next elements
         else
-          Internal.render_opening_tag(tag, attributes)
-          <> _render_body(body)
-          <> Internal.render_closing_tag(tag)
+          [Internal.render_opening_tag(tag, attributes),
+           _render_body(body),
+           Internal.render_closing_tag(tag)]
         end
 
       # list with tag and child nodes
       [tag | body] when is_atom(tag) ->
         if Internal.is_void_tag?(tag) do
-          Internal.render_void_tag(tag)
-          <> _render_body(body)  # not actually body, next elements
+          [Internal.render_void_tag(tag),
+           _render_body(body)]  # not actually body, next elements
         else
-          Internal.render_opening_tag(tag)
-          <> _render_body(body)
-          <> Internal.render_closing_tag(tag)
+          [Internal.render_opening_tag(tag),
+           _render_body(body),
+           Internal.render_closing_tag(tag)]
         end
 
       # list with list of child nodes
       [node] when is_list(node) ->
-        _render node
+        [_render node]
 
       # list with sub-list as first element
       [node | rest] when is_list(node) ->
-        _render(node) <> _render(rest)
+        [_render(node), _render(rest)]
 
       # list with single, stringible member
-      [node] ->
-        to_string(node) |> HtmlEntities.encode
+      [something] ->
+        [to_string(something) |> HtmlEntities.encode]
 
       # any non-list node
       bare_node ->
-        to_string(bare_node) |> HtmlEntities.encode
+        [to_string(bare_node) |> HtmlEntities.encode]
 
     end
   end
@@ -126,7 +127,6 @@ defmodule Sneeze do
   defp _render_body(body_elements) do
     body_elements
     |> Enum.map(&_render/1)
-    |> Enum.join("")
   end
 
 end
