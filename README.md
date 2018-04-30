@@ -27,8 +27,8 @@ The `Sneeze.render/1` function will render a list of 'nodes' to html. A node can
 - A bare, stringable node: `22`
 - A "raw html" node, which will not be escaped: `[:__@raw_html, "<span>derp</span>"]`
 
-
-Of course, the `body` of any node can be an arbitrary number of other nodes.
+Of course, the `body` of any node can be an arbitrary number of other nodes, like so:
+`[:p, %{id: "status"}, [:span, "woo"]]`
 
 
 ## Examples
