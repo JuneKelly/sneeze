@@ -132,31 +132,33 @@ defmodule SneezeInternalTest do
 
   test "create attribute string from map" do
     assert Internal.attributes_to_string(%{class: "foo", id: "bar"}) ==
-      "class=\"foo\" id=\"bar\""
+      [[" ", "class", "=\"", "foo", "\""], [" ", "id", "=\"", "bar", "\""]]
+
   end
 
   test "empty attributes" do
     assert Internal.attributes_to_string(%{}) ==
-      ""
+      []
   end
 
   test "opening tag" do
     assert Internal.render_opening_tag(:p) ==
-      "<p>"
+      ["<", "p", ">"]
     assert Internal.render_opening_tag(:p, %{class: "greeting"}) ==
-      "<p class=\"greeting\">"
+      ["<", "p", [[" ", "class", "=\"", "greeting", "\""]], ">"]
+
   end
 
   test "closing tag" do
     assert Internal.render_closing_tag(:p) ==
-      "</p>"
+      ["</", "p", ">"]
   end
 
   test "self-closing tag" do
     assert Internal.render_void_tag(:br) ==
-      "<br />"
+      ["<", "br", " />"]
     assert Internal.render_void_tag(:br, %{class: "foo"}) ==
-      "<br class=\"foo\" />"
+      ["<", "br", [[" ", "class", "=\"", "foo", "\""]], " ", "/>"]
   end
 
 end

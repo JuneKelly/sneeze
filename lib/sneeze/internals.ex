@@ -11,7 +11,7 @@ defmodule Sneeze.Internal do
   end
 
   def attributes_to_string(attrib_map) do
-    Enum.map(attrib_map, fn({k,v}) -> [to_string(k), "=\"", v, "\" "] end)
+    Enum.map(attrib_map, fn({k,v}) -> [" ", to_string(k), "=\"", v, "\""] end)
   end
 
   def render_opening_tag(tag_name) do
@@ -22,7 +22,7 @@ defmodule Sneeze.Internal do
   def render_opening_tag(tag_name, attribs) do
     attrib_string = attributes_to_string(attribs)
     # "<#{tag_name} #{attrib_string}>"
-    ["<", to_string(tag_name), " ", attrib_string, ">"]
+    ["<", to_string(tag_name), attrib_string, ">"]
   end
 
   def render_closing_tag(tag_name) do
@@ -38,7 +38,7 @@ defmodule Sneeze.Internal do
   def render_void_tag(tag_name, attribs) do
     attrib_string = attributes_to_string(attribs)
     # "<#{tag_name} #{attrib_string} />"
-    ["<", to_string(tag_name), " ", attrib_string, "/>"]
+    ["<", to_string(tag_name), attrib_string, " ", "/>"]
   end
 
   def render_tag(tag) do
