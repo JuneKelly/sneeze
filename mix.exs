@@ -2,14 +2,16 @@ defmodule Sneeze.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :sneeze,
-     version: "1.0.1",
-     elixir: "~> 1.3",
-     description: "Render Elixir data to HTML. Inspired by Hiccup.",
-     package: package(),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [
+      app: :sneeze,
+      version: "1.0.1",
+      elixir: "~> 1.3",
+      description: "Render Elixir data to HTML. Inspired by Hiccup.",
+      package: package(),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -29,14 +31,15 @@ defmodule Sneeze.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:html_entities, "~> 0.4"},
-     {:ex_doc, ">= 0.14.1", only: :dev}]
+    [{:html_entities, "~> 0.4"}, {:ex_doc, ">= 0.14.1", only: :dev}]
   end
 
   defp package do
-    [name: :sneeze,
-     maintainers: ["Shane Kilkelly"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/ShaneKilkelly/sneeze"}]
+    [
+      name: :sneeze,
+      maintainers: ["Shane Kilkelly"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/ShaneKilkelly/sneeze"}
+    ]
   end
 end
