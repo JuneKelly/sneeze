@@ -131,13 +131,13 @@ defmodule SneezeInternalTest do
   alias Sneeze.Internal
 
   test "create attribute string from map" do
-    assert Internal.attributes_to_string(%{class: "foo", id: "bar"}) ==
+    assert Internal.attributes_to_iolist(%{class: "foo", id: "bar"}) ==
       [[" ", "class", "=\"", "foo", "\""], [" ", "id", "=\"", "bar", "\""]]
 
   end
 
   test "empty attributes" do
-    assert Internal.attributes_to_string(%{}) ==
+    assert Internal.attributes_to_iolist(%{}) ==
       []
   end
 

@@ -10,35 +10,30 @@ defmodule Sneeze.Internal do
     Enum.member? void_tags(), tag
   end
 
-  def attributes_to_string(attrib_map) do
+  def attributes_to_iolist(attrib_map) do
     Enum.map(attrib_map, fn({k,v}) -> [" ", to_string(k), "=\"", v, "\""] end)
   end
 
   def render_opening_tag(tag_name) do
-    # "<#{tag_name}>"
     ["<", to_string(tag_name), ">"]
   end
 
   def render_opening_tag(tag_name, attribs) do
-    attrib_string = attributes_to_string(attribs)
-    # "<#{tag_name} #{attrib_string}>"
-    ["<", to_string(tag_name), attrib_string, ">"]
+    attrib_iolist = attributes_to_iolist(attribs)
+    ["<", to_string(tag_name), attrib_iolist, ">"]
   end
 
   def render_closing_tag(tag_name) do
-    # "</#{tag_name}>"
     ["</", to_string(tag_name), ">"]
   end
 
   def render_void_tag(tag_name) do
-    # "<#{tag_name} />"
     ["<", to_string(tag_name), " />"]
   end
 
   def render_void_tag(tag_name, attribs) do
-    attrib_string = attributes_to_string(attribs)
-    # "<#{tag_name} #{attrib_string} />"
-    ["<", to_string(tag_name), attrib_string, " ", "/>"]
+    attrib_iolist = attributes_to_iolist(attribs)
+    ["<", to_string(tag_name), attrib_iolist, " ", "/>"]
   end
 
   def render_tag(tag) do
