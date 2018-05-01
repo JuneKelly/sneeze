@@ -83,3 +83,9 @@ See [cold](https://github.com/ShaneKilkelly/cold-sneeze) for a demo of how to us
 ## Bugs, Improvements and Contributing
 
 Open an issue or pull-request on [GitHub](https://github.com/ShaneKilkelly/sneeze), all contributions welcome! :)
+
+## Changes
+
+### 1.1.0
+
+- Better performance, using iolists instead of string-concatination
