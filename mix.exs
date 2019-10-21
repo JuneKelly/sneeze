@@ -18,7 +18,7 @@ defmodule Sneeze.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: []]
+    [applications: [:html_entities]]
   end
 
   # Dependencies can be Hex packages:
@@ -31,7 +31,10 @@ defmodule Sneeze.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:html_entities, "~> 0.4"}, {:ex_doc, ">= 0.14.1", only: :dev}]
+    [
+      {:html_entities, "0.4.0"},
+      {:ex_doc, ">= 0.14.1", only: :dev}
+    ]
   end
 
   defp package do
