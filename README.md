@@ -11,7 +11,7 @@ Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
 
 ```elixir
 def deps do
-  [{:sneeze, "~> 1.1"}]
+  [{:sneeze, "~> 1.2"}]
 end
 ```
 
@@ -84,7 +84,13 @@ See [cold](https://github.com/ShaneKilkelly/cold-sneeze) for a demo of how to us
 
 Open an issue or pull-request on [GitHub](https://github.com/ShaneKilkelly/sneeze), all contributions welcome! :)
 
+
 ## Changes
+
+### 1.2.0
+
+- Add `html_entities` to application list
+
 
 ### 1.1.0
 

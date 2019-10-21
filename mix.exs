@@ -4,7 +4,7 @@ defmodule Sneeze.Mixfile do
   def project do
     [
       app: :sneeze,
-      version: "1.1.0",
+      version: "1.2.0",
       elixir: "~> 1.6",
       description: "Render Elixir data to HTML. Inspired by Hiccup.",
       package: package(),
