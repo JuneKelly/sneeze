@@ -1,8 +1,13 @@
 # Sneeze
 
-Render Elixir data-structures to HTML. Inspired by [Hiccup](https://github.com/weavejester/hiccup).
-
 [![CircleCI](https://circleci.com/gh/ShaneKilkelly/sneeze.svg?style=shield)](https://circleci.com/gh/ShaneKilkelly/sneeze)
+[![Module Version](https://img.shields.io/hexpm/v/sneeze.svg)](https://hex.pm/packages/sneeze)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/sneeze/)
+[![Total Download](https://img.shields.io/hexpm/dt/sneeze.svg)](https://hex.pm/packages/sneeze)
+[![License](https://img.shields.io/hexpm/l/sneeze.svg)](https://github.com/JuneKelly/sneeze/blob/master/LICENSE.md)
+[![Last Updated](https://img.shields.io/github/last-commit/JuneKelly/sneeze.svg)](https://github.com/JuneKelly/sneeze/commits/master)
+
+Render Elixir data-structures to HTML. Inspired by [Hiccup](https://github.com/weavejester/hiccup).
 
 
 ## Installation
@@ -11,7 +16,9 @@ Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
 
 ```elixir
 def deps do
-  [{:sneeze, "~> 1.2"}]
+  [
+    {:sneeze, "~> 1.2"}
+  ]
 end
 ```
 
@@ -95,3 +102,11 @@ Open an issue or pull-request on [GitHub](https://github.com/ShaneKilkelly/sneez
 ### 1.1.0
 
 - Better performance, using iolists instead of string-concatination
+
+
+## Copyright and License
+
+Copyright (c) 2016 Shane Kilkelly
+
+This work is free. You can redistribute it and/or modify it under the
+terms of the MIT License. See the [LICENSE.md](./LICENSE.md) file for more details.

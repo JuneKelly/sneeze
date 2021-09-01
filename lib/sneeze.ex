@@ -16,20 +16,22 @@ defmodule Sneeze do
   - A bare, stringable value (such as a string or number)
   - A list of elements
 
-  The content of `:__@raw_html`, `:style` and `:script` elements will not be escaped.
+  The content of `:__@raw_html`, `:style` and `:script` elements will not be
+  escaped.
+
   All other elements content will be html-escaped.
 
-  Examples:
-  ```
-  render([:p, %{class: "outlined"}, "hello"])
-  render([:br])
-  render([[:span, "one"], [:span, %{class: "highlight"}, "two"]])
-  render([:ul, %{id: "some-list"},
-          [:li, [:a, %{href: "/"},      "Home"]],
-          [:li, [:a, %{href: "/about"}, "About"]]])
-  render([:__@raw_html, "<!DOCTYPE html>"])
-  render([:script, "console.log(42 < 9);"])
-  ```
+  ## Examples
+
+      render([:p, %{class: "outlined"}, "hello"])
+      render([:br])
+      render([[:span, "one"], [:span, %{class: "highlight"}, "two"]])
+      render([:ul, %{id: "some-list"},
+              [:li, [:a, %{href: "/"},      "Home"]],
+              [:li, [:a, %{href: "/about"}, "About"]]])
+      render([:__@raw_html, "<!DOCTYPE html>"])
+      render([:script, "console.log(42 < 9);"])
+
   """
   def render(data) do
     # _render(data)
