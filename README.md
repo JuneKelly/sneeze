@@ -2,8 +2,6 @@
 
 Render Elixir data-structures to HTML. Inspired by [Hiccup](https://github.com/weavejester/hiccup).
 
-[![CircleCI](https://circleci.com/gh/ShaneKilkelly/sneeze.svg?style=shield)](https://circleci.com/gh/ShaneKilkelly/sneeze)
-
 
 ## Installation
 
@@ -77,15 +75,20 @@ Documentation can be found on [hexdocs](https://hexdocs.pm/sneeze/).
 
 ## Demo App
 
-See [cold](https://github.com/ShaneKilkelly/cold-sneeze) for a demo of how to use Sneeze with Plug.
+See [cold](https://github.com/JuneKelly/cold-sneeze) for a demo of how to use Sneeze with Plug.
 
 
 ## Bugs, Improvements and Contributing
 
-Open an issue or pull-request on [GitHub](https://github.com/ShaneKilkelly/sneeze), all contributions welcome! :)
+Open an issue or pull-request on [GitHub](https://github.com/JuneKelly/sneeze), all contributions welcome! :)
 
 
 ## Changes
+
+### 1.2.1
+
+- Upgrade `html_entities`
+
 
 ### 1.2.0
 

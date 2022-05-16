@@ -32,17 +32,17 @@ defmodule Sneeze.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:html_entities, "0.4.0"},
-      {:ex_doc, ">= 0.14.1", only: :dev}
+      {:html_entities, "~> 0.5"},
+      {:ex_doc, "~> 0.28", only: :dev}
     ]
   end
 
   defp package do
     [
       name: :sneeze,
-      maintainers: ["Shane Kilkelly"],
+      maintainers: ["June Kelly"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/ShaneKilkelly/sneeze"}
+      links: %{"GitHub" => "https://github.com/JuneKelly/sneeze"}
     ]
   end
 end
