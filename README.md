@@ -28,6 +28,8 @@ The `Sneeze.render/1` function will render a list of 'nodes' to html. A node can
 Of course, the `body` of any node can be an arbitrary number of other nodes, like so:
 `[:p, %{id: "status"}, [:span, "woo"]]`
 
+The `Sneeze.render_iodata/1` function returns an iodata list, which can be more performant in cases where you are passing the result to a function that accepts iodata.
+
 
 ## Examples
 
@@ -63,6 +65,13 @@ Sneeze.render([
    [:div, %{id: "main-content"}, "hello"]]
 ]
 # => <!DOCTYPE html><head><title>wat</title></head><body><div id="main-content">hello</div></body>
+
+Sneeze.render_iodata([:a, %{href: "example.com"}, "hello"])
+# => [
+#      ["<", "a", [[" ", "href", "=\"", "example.com", "\""]], ">"],
+#      [["hello"]],
+#      ["</", "a", ">"]
+#    ]
 ```
 
 If you're using sneeze and getting surprising/screwy results, please [open an issue](https://github.com/JuneKelly/sneeze/issues).

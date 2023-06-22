@@ -32,8 +32,26 @@ defmodule Sneeze do
   ```
   """
   def render(data) do
-    # _render(data)
     IO.iodata_to_binary(_render(data))
+  end
+
+  @doc ~s"""
+  Render a data-structure, containing 'elements' to an iodata list.
+  This can be more performant than `render/1` if you are passing the result to a function that takes iodata.
+
+  Example:
+  ```
+  render_iodata([:a, %{href: "example.com"}, "hello"])
+  # becomes...
+  [
+    ["<", "a", [[" ", "href", "=\"", "example.com", "\""]], ">"],
+    [["hello"]],
+    ["</", "a", ">"]
+  ]
+  ```
+  """
+  def render_iodata(data) do
+    _render(data)
   end
 
   defp _render(data) do

@@ -113,6 +113,68 @@ defmodule SneezeTest do
     data = [:span, %{class: "lol 🐜"}, "Hello ◊"]
     assert Sneeze.render(data) == "<span class=\"lol 🐜\">Hello ◊</span>"
   end
+
+  test "render_iodata, empty data" do
+    assert Sneeze.render_iodata([]) == []
+    assert Sneeze.render_iodata(nil) == [""]
+  end
+
+  test "render_iodata, small example" do
+    data = [:a, %{href: "example.com"}, "hello"]
+
+    assert Sneeze.render_iodata(data) == [
+             ["<", "a", [[" ", "href", "=\"", "example.com", "\""]], ">"],
+             [["hello"]],
+             ["</", "a", ">"]
+           ]
+  end
+
+  test "render_iodata, larger example" do
+    data = [
+      :div,
+      [
+        [:span, %{class: "something"}, "hello"],
+        [:a, %{href: "example.com"}, "a link"]
+      ]
+    ]
+
+    assert Sneeze.render_iodata(data) == [
+             ["<", "div", ">"],
+             [
+               [
+                 [
+                   ["<", "span", [[" ", "class", "=\"", "something", "\""]], ">"],
+                   [["hello"]],
+                   ["</", "span", ">"]
+                 ],
+                 [
+                   [
+                     ["<", "a", [[" ", "href", "=\"", "example.com", "\""]], ">"],
+                     [["a link"]],
+                     ["</", "a", ">"]
+                   ]
+                 ]
+               ]
+             ],
+             ["</", "div", ">"]
+           ]
+  end
+
+  test "render_iodata, with embedded html" do
+    data = [
+      :p,
+      %{id: "wat"},
+      [:br],
+      [:__@raw_html, "<span>test</span>"],
+      [:br]
+    ]
+
+    assert Sneeze.render_iodata(data) == [
+             ["<", "p", [[" ", "id", "=\"", "wat", "\""]], ">"],
+             [[["<", "br", " />"]], ["<span>test</span>"], [["<", "br", " />"]]],
+             ["</", "p", ">"]
+           ]
+  end
 end
 
 defmodule SneezeInternalTest do
