@@ -18,8 +18,9 @@ defmodule SneezeTest do
     assert Sneeze.render(42) == "42"
   end
 
-  test "empty" do
+  test "empty data" do
     assert Sneeze.render([]) == ""
+    assert Sneeze.render(nil) == ""
   end
 
   test "empty p tag" do
