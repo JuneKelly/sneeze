@@ -107,6 +107,11 @@ defmodule SneezeTest do
     data = [:style, ".foo > .bar { color: pink; }"]
     assert Sneeze.render(data) == "<style>.foo > .bar { color: pink; }</style>"
   end
+
+  test "some unicode" do
+    data = [:span, %{class: "lol 🐜"}, "Hello ◊"]
+    assert Sneeze.render(data) == "<span class=\"lol 🐜\">Hello ◊</span>"
+  end
 end
 
 defmodule SneezeInternalTest do
