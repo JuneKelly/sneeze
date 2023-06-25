@@ -3,9 +3,9 @@ name: Elixir CI
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ "master" ]
 
 permissions:
   contents: read
