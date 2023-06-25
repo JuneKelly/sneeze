@@ -7,7 +7,7 @@ defmodule SneezeTest do
   end
 
   test "just a string" do
-    assert Sneeze.render("wat") == "wat"
+    assert Sneeze.render("wat") == "this will not work"
   end
 
   test "escape some html" do
