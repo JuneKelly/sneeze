@@ -9,7 +9,7 @@ Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
 
 ```elixir
 def deps do
-  [{:sneeze, "~> 1.2"}]
+  [{:sneeze, "~> 1.3"}]
 end
 ```
 
@@ -84,6 +84,12 @@ Open an issue or pull-request on [GitHub](https://github.com/JuneKelly/sneeze), 
 
 
 ## Changes
+
+### 1.3.0
+
+- A new `Sneeze.render_iodata/1` function
+- Various modernizations, dependency upgrades
+
 
 ### 1.2.1
 
