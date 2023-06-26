@@ -25,7 +25,8 @@ defmodule Sneeze.Internal do
   end
 
   def attributes_to_iolist(attrib_map) do
-    Enum.map(attrib_map, fn {k, v} -> [" ", to_string(k), "=\"", v, "\""] end)
+    Enum.sort(attrib_map)
+    |> Enum.map(fn {k, v} -> [" ", to_string(k), "=\"", v, "\""] end)
   end
 
   def render_opening_tag(tag_name) do
