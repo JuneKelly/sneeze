@@ -3,29 +3,22 @@ defmodule Sneeze.Internal do
 
   Sneeze.Macros.define_tags_to_strings([
     :a,
+    :div,
     :span,
     :li,
-    :div,
-    :td,
     :br,
-    :ul,
-    :tr,
-    :link,
     :p,
-    :title,
-    :script,
-    :style,
-    :button,
-    :label,
-    :code,
-    :h1,
-    :h2,
-    :h3,
-    :h4,
-    :h5,
+    :link,
     :meta,
-    :body,
-    :head
+    :td,
+    :tr,
+    :ul,
+    :h3,
+    :h2,
+    :img,
+    :code,
+    :svg,
+    :button
   ])
 
   def void_tags() do
