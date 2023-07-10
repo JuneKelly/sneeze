@@ -184,8 +184,16 @@ defmodule SneezeInternalTest do
   alias Sneeze.Internal
 
   test "create attribute string from map" do
-    assert Internal.attributes_to_iolist(%{class: "foo", id: "bar"}) ==
+    assert Internal.attributes_to_iolist(%{id: "bar", class: "foo"}) ==
              [[" ", "class", "=\"", "foo", "\""], [" ", "id", "=\"", "bar", "\""]]
+  end
+
+  test "stable order of attributes, regardless of map key order" do
+    assert Internal.attributes_to_iolist(%{c: "3", b: "2", a: "1"}) == [
+             [" ", "a", "=\"", "1", "\""],
+             [" ", "b", "=\"", "2", "\""],
+             [" ", "c", "=\"", "3", "\""]
+           ]
   end
 
   test "empty attributes" do
