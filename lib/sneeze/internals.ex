@@ -1,4 +1,26 @@
 defmodule Sneeze.Internal do
+  require Sneeze.Macros
+
+  Sneeze.Macros.define_tags_to_strings([
+    :a,
+    :div,
+    :span,
+    :li,
+    :br,
+    :p,
+    :link,
+    :meta,
+    :td,
+    :tr,
+    :ul,
+    :h3,
+    :h2,
+    :img,
+    :code,
+    :svg,
+    :button
+  ])
+
   def void_tags() do
     [
       :area,
@@ -29,25 +51,25 @@ defmodule Sneeze.Internal do
   end
 
   def render_opening_tag(tag_name) do
-    ["<", to_string(tag_name), ">"]
+    ["<", tag_to_string(tag_name), ">"]
   end
 
   def render_opening_tag(tag_name, attribs) do
     attrib_iolist = attributes_to_iolist(attribs)
-    ["<", to_string(tag_name), attrib_iolist, ">"]
+    ["<", tag_to_string(tag_name), attrib_iolist, ">"]
   end
 
   def render_closing_tag(tag_name) do
-    ["</", to_string(tag_name), ">"]
+    ["</", tag_to_string(tag_name), ">"]
   end
 
   def render_void_tag(tag_name) do
-    ["<", to_string(tag_name), " />"]
+    ["<", tag_to_string(tag_name), " />"]
   end
 
   def render_void_tag(tag_name, attribs) do
     attrib_iolist = attributes_to_iolist(attribs)
-    ["<", to_string(tag_name), attrib_iolist, " ", "/>"]
+    ["<", tag_to_string(tag_name), attrib_iolist, " ", "/>"]
   end
 
   def render_tag(tag) do
