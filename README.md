@@ -9,7 +9,7 @@ Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
 
 ```elixir
 def deps do
-  [{:sneeze, "~> 1.3"}]
+  [{:sneeze, "~> 2.0"}]
 end
 ```
 
@@ -93,6 +93,12 @@ Open an issue or pull-request on [GitHub](https://github.com/JuneKelly/sneeze), 
 
 
 ## Changes
+
+### 2.0.0
+
+- Improved performance! (https://github.com/JuneKelly/sneeze/pull/19)
+- Attributes are now sorted before being rendered. This fixes an issue found when upgrading to OTP 26 (https://github.com/JuneKelly/sneeze/issues/17)
+
 
 ### 1.3.0
 
