@@ -32,7 +32,8 @@ defmodule Sneeze do
   ```
   """
   def render(data) do
-    IO.iodata_to_binary(_render(data))
+    _render(data)
+    |> IO.iodata_to_binary()
   end
 
   @doc ~s"""
