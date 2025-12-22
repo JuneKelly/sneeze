@@ -1,4 +1,4 @@
-# Hammer makefile
+# Sneeze makefile
 
 default: format test docs
 
