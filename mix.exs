@@ -4,36 +4,23 @@ defmodule Sneeze.Mixfile do
   def project do
     [
       app: :sneeze,
-      version: "2.0.0",
-      elixir: "~> 1.11",
-      description: "Render Elixir data to HTML. Inspired by Hiccup.",
-      package: package(),
-      build_embedded: Mix.env() == :prod,
+      version: "3.0.0",
+      elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: package(),
+
+      # Docs
+      name: "Sneeze",
+      source_url: "https://github.com/JuneKelly/sneeze",
+      homepage_url: "https://github.com/JuneKelly/sneeze",
+      docs: &docs/0
     ]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type "mix help compile.app" for more information
   def application do
-    [applications: [:html_entities]]
-  end
-
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
-  defp deps do
     [
-      {:html_entities, "~> 0.5"},
-      {:ex_doc, "~> 0.29", only: :dev}
+      extra_applications: [:logger, :html_entities]
     ]
   end
 
@@ -43,6 +30,21 @@ defmodule Sneeze.Mixfile do
       maintainers: ["June Kelly"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/JuneKelly/sneeze"}
+    ]
+  end
+
+  defp deps do
+    [
+      {:html_entities, "~> 0.5"},
+      {:ex_doc, "~> 0.39", only: :dev, runtime: false, warn_if_outdated: true}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Sneeze",
+      # logo: "path/to/logo.png",
+      extras: ["README.md"]
     ]
   end
 end
