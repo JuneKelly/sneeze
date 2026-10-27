@@ -28,6 +28,8 @@ The `Sneeze.render/1` function will render a list of 'nodes' to html. A node can
 Of course, the `body` of any node can be an arbitrary number of other nodes, like so:
 `[:p, %{id: "status"}, [:span, "woo"]]`
 
+Attribute values are html-escaped. A `true` value repeats the attribute name (`[:input, %{disabled: true}]` becomes `<input disabled="disabled" />`), and a `false` or `nil` value omits the attribute. Invalid attribute names (such as `"x onclick"`) raise an `ArgumentError`.
+
 The `Sneeze.render_iodata/1` function returns an iodata list, which can be more performant in cases where you are passing the result to a function that accepts iodata.
 
 

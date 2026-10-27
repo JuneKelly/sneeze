@@ -114,6 +114,108 @@ defmodule SneezeTest do
     assert Sneeze.render(data) == "<span class=\"lol 🐜\">Hello ◊</span>"
   end
 
+  test "attribute values are escaped" do
+    data = [:a, %{href: "x\" onclick=\"alert('<hi>&')"}, "link"]
+
+    assert Sneeze.render(data) ==
+             "<a href=\"x&quot; onclick=&quot;alert(&#39;&lt;hi&gt;&amp;&#39;)\">link</a>"
+  end
+
+  test "invalid attribute names raise" do
+    for name <- [
+          "x onclick",
+          "x=\"\"",
+          "a\"b",
+          "a=b",
+          "a/b",
+          "a>b",
+          "a'b",
+          "a\tb",
+          "a\nb",
+          <<?a, 0x1F>>,
+          "a\x7Fb",
+          <<?a, 0x85::utf8>>,
+          <<?a, 0x9F::utf8>>,
+          <<?a, 0xFDD0::utf8>>,
+          <<?a, 0xFDEF::utf8>>,
+          <<?a, 0xFFFE::utf8>>,
+          <<?a, 0x1FFFF::utf8>>,
+          "",
+          nil,
+          <<0xFF>>
+        ] do
+      assert_raise ArgumentError, ~r/invalid attribute name/, fn ->
+        Sneeze.render([:p, %{name => "y"}, "hi"])
+      end
+    end
+  end
+
+  test "unusual but valid attribute names are allowed" do
+    data = [:div, %{"data-x" => "1", "@click" => "go", "x:lang" => "en", "ünï" => "2"}]
+
+    assert Sneeze.render(data) ==
+             "<div @click=\"go\" data-x=\"1\" x:lang=\"en\" ünï=\"2\"></div>"
+  end
+
+  test "characters just outside the rejected ranges are allowed in names" do
+    for name <- [
+          "a!b",
+          "a~b",
+          <<?a, 0xA0::utf8>>,
+          <<?a, 0xFDCF::utf8>>,
+          <<?a, 0xFDF0::utf8>>,
+          <<?a, 0xFFFD::utf8>>
+        ] do
+      assert Sneeze.render([:p, %{name => "y"}]) == "<p #{name}=\"y\"></p>"
+    end
+  end
+
+  test "non-string attribute values are stringified" do
+    assert Sneeze.render([:img, %{width: 100, loading: :lazy}]) ==
+             "<img loading=\"lazy\" width=\"100\" />"
+  end
+
+  test "true attribute values repeat the attribute name" do
+    assert Sneeze.render([:input, %{disabled: true, type: "checkbox"}]) ==
+             "<input disabled=\"disabled\" type=\"checkbox\" />"
+
+    assert Sneeze.render([:p, %{"a&b" => true}]) == "<p a&b=\"a&amp;b\"></p>"
+  end
+
+  test "false and nil attribute values are omitted" do
+    for value <- [false, nil] do
+      assert Sneeze.render([:input, %{disabled: value, type: "checkbox"}]) ==
+               "<input type=\"checkbox\" />"
+
+      assert Sneeze.render([:p, %{hidden: value}, "hi"]) == "<p>hi</p>"
+    end
+  end
+
+  test "a list with a single bare value is escaped" do
+    assert Sneeze.render(["<b>"]) == "&lt;b&gt;"
+    assert Sneeze.render([42]) == "42"
+  end
+
+  test "script and style tags with attributes" do
+    assert Sneeze.render([:script, %{src: "a.js?x=1&y=2", defer: true, async: nil}, ""]) ==
+             "<script defer=\"defer\" src=\"a.js?x=1&amp;y=2\"></script>"
+
+    assert Sneeze.render([:style, %{media: "screen"}, "a > b { color: red; }"]) ==
+             "<style media=\"screen\">a > b { color: red; }</style>"
+  end
+
+  test "attribute names are validated even when the value is omitted" do
+    for value <- [false, nil] do
+      assert_raise ArgumentError, ~r/invalid attribute name/, fn ->
+        Sneeze.render([:p, %{"x onclick" => value}, "hi"])
+      end
+    end
+  end
+
+  test "iodata attribute values are rendered as bytes and escaped" do
+    assert Sneeze.render([:p, %{class: ["a&", ?b, [195, 169]]}]) == "<p class=\"a&amp;bé\"></p>"
+  end
+
   test "render_iodata, empty data" do
     assert Sneeze.render_iodata([]) == []
     assert Sneeze.render_iodata(nil) == [""]
@@ -198,6 +300,23 @@ defmodule SneezeInternalTest do
 
   test "empty attributes" do
     assert Internal.attributes_to_iolist(%{}) == []
+  end
+
+  test "escape leaves strings without special characters unchanged" do
+    assert Internal.escape("") == ""
+    assert Internal.escape("plain text 🐜") == "plain text 🐜"
+  end
+
+  test "escape encodes each special character" do
+    assert Internal.escape("a\"b'c&d<e>f") == "a&quot;b&#39;c&amp;d&lt;e&gt;f"
+  end
+
+  test "escape encodes each special character on its own" do
+    assert Internal.escape("a\"b") == "a&quot;b"
+    assert Internal.escape("a'b") == "a&#39;b"
+    assert Internal.escape("a&b") == "a&amp;b"
+    assert Internal.escape("a<b") == "a&lt;b"
+    assert Internal.escape("a>b") == "a&gt;b"
   end
 
   test "opening tag" do

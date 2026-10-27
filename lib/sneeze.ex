@@ -19,6 +19,10 @@ defmodule Sneeze do
   The content of `:__@raw_html`, `:style` and `:script` elements will not be escaped.
   All other elements content will be html-escaped.
 
+  Attribute values are html-escaped. A `true` value repeats the attribute name
+  (`disabled="disabled"`), and a `false` or `nil` value omits the attribute.
+  Invalid attribute names raise an `ArgumentError`.
+
   Examples:
   ```
   render([:p, %{class: "outlined"}, "hello"])
@@ -139,11 +143,11 @@ defmodule Sneeze do
 
       # list with single, stringible member
       [something] ->
-        [to_string(something) |> HtmlEntities.encode()]
+        [to_string(something) |> Internal.escape()]
 
       # any non-list node
       bare_node ->
-        [to_string(bare_node) |> HtmlEntities.encode()]
+        [to_string(bare_node) |> Internal.escape()]
     end
   end
 
