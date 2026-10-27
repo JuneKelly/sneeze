@@ -2,7 +2,6 @@
 
 Render Elixir data-structures to HTML. Inspired by [Hiccup](https://github.com/weavejester/hiccup).
 
-
 ## Installation
 
 Sneeze is available from [Hex.pm](https://hex.pm/packages/sneeze):
