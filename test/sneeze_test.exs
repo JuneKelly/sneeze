@@ -101,12 +101,25 @@ defmodule SneezeTest do
 
   test "a script tag" do
     data = [:script, "console.log(42 < 9);"]
+    assert Sneeze.render(data) == "<script>console.log(42 &lt; 9);</script>"
+
+    data = [:script, [:__@raw_html, "console.log(42 < 9);"]]
     assert Sneeze.render(data) == "<script>console.log(42 < 9);</script>"
   end
 
   test "a style tag" do
     data = [:style, ".foo > .bar { color: pink; }"]
+    assert Sneeze.render(data) == "<style>.foo &gt; .bar { color: pink; }</style>"
+
+    data = [:style, [:__@raw_html, ".foo > .bar { color: pink; }"]]
     assert Sneeze.render(data) == "<style>.foo > .bar { color: pink; }</style>"
+  end
+
+  test "script content can't close the script tag" do
+    data = [:script, "var s = \"</script><img src=x onerror=alert(1)>\";"]
+
+    assert Sneeze.render(data) ==
+             "<script>var s = &quot;&lt;/script&gt;&lt;img src=x onerror=alert(1)&gt;&quot;;</script>"
   end
 
   test "some unicode" do
@@ -200,7 +213,7 @@ defmodule SneezeTest do
     assert Sneeze.render([:script, %{src: "a.js?x=1&y=2", defer: true, async: nil}, ""]) ==
              "<script defer=\"defer\" src=\"a.js?x=1&amp;y=2\"></script>"
 
-    assert Sneeze.render([:style, %{media: "screen"}, "a > b { color: red; }"]) ==
+    assert Sneeze.render([:style, %{media: "screen"}, [:__@raw_html, "a > b { color: red; }"]]) ==
              "<style media=\"screen\">a > b { color: red; }</style>"
   end
 
@@ -212,8 +225,109 @@ defmodule SneezeTest do
     end
   end
 
-  test "iodata attribute values are rendered as bytes and escaped" do
-    assert Sneeze.render([:p, %{class: ["a&", ?b, [195, 169]]}]) == "<p class=\"a&amp;bé\"></p>"
+  test "list attribute values are joined with spaces and escaped" do
+    assert Sneeze.render([:p, %{class: ["a&", :b, 3, nil, "c"]}]) ==
+             "<p class=\"a&amp; b 3  c\"></p>"
+
+    assert Sneeze.render([:p, %{class: []}]) == "<p class=\"\"></p>"
+  end
+
+  test "map attribute values are rendered as sorted styles and escaped" do
+    data = [:p, %{style: %{"z-index" => 2, color: :red, content: "\"x\"", margin: nil}}]
+
+    assert Sneeze.render(data) ==
+             "<p style=\"color:red;content:&quot;x&quot;;margin:;z-index:2;\"></p>"
+
+    assert Sneeze.render([:p, %{style: %{}}]) == "<p style=\"\"></p>"
+    assert Sneeze.render([:p, %{style: %{"a" => 1, b: 2}}]) == "<p style=\"a:1;b:2;\"></p>"
+  end
+
+  test "charlist attribute values are lists of integers" do
+    assert Sneeze.render([:p, %{title: ~c"hi"}]) == "<p title=\"104 105\"></p>"
+  end
+
+  test "struct attribute values are stringified, not rendered as styles" do
+    assert Sneeze.render([:a, %{href: URI.parse("https://x.test/?a=1&b=2")}]) ==
+             "<a href=\"https://x.test/?a=1&amp;b=2\"></a>"
+  end
+
+  test "tag shorthand for id and classes" do
+    assert Sneeze.render([:"div#main", "x"]) == "<div id=\"main\">x</div>"
+    assert Sneeze.render([:"div.a.b", "x"]) == "<div class=\"a b\">x</div>"
+    assert Sneeze.render([:"div#main.a.b"]) == "<div class=\"a b\" id=\"main\"></div>"
+    assert Sneeze.render([:"br.clear"]) == "<br class=\"clear\" />"
+    assert Sneeze.render([:"input#q", %{type: "text"}]) == "<input id=\"q\" type=\"text\" />"
+    assert Sneeze.render([:"p.a", %{}, "x"]) == "<p class=\"a\">x</p>"
+    assert Sneeze.render(["span#s", %{}, "x"]) == "<span id=\"s\">x</span>"
+  end
+
+  test "tag shorthand merges with the attribute map" do
+    assert Sneeze.render([:"p#short", %{id: "map"}]) == "<p id=\"map\"></p>"
+    assert Sneeze.render([:"p#short", %{id: nil}]) == "<p id=\"short\"></p>"
+    assert Sneeze.render([:"p.a", %{class: "b"}]) == "<p class=\"a b\"></p>"
+    assert Sneeze.render([:"p.a", %{class: ["b", nil, :c]}]) == "<p class=\"a b c\"></p>"
+    assert Sneeze.render([:"p.a", %{class: nil}]) == "<p class=\"a\"></p>"
+    assert Sneeze.render([:"p.a", %{class: false}]) == "<p class=\"a\"></p>"
+    assert Sneeze.render([:"p#s.a", %{"id" => "m", "class" => "b"}]) == "<p class=\"a b\" id=\"m\"></p>"
+  end
+
+  test "tag shorthand values are escaped" do
+    assert Sneeze.render([:"p#a&b"]) == "<p id=\"a&amp;b\"></p>"
+    assert Sneeze.render([:"p#a#b"]) == "<p id=\"a#b\"></p>"
+  end
+
+  test "invalid tag names raise" do
+    for tag <- [
+          :"p onclick=alert(1)",
+          :"p>",
+          :"p/",
+          :"p\"",
+          :"p\tq",
+          :"1p",
+          :"-p",
+          :"#main",
+          :".a",
+          :""
+        ] do
+      assert_raise ArgumentError, ~r/invalid tag name/, fn -> Sneeze.render([tag, "x"]) end
+      assert_raise ArgumentError, ~r/invalid tag name/, fn -> Sneeze.render([tag]) end
+      assert_raise ArgumentError, ~r/invalid tag name/, fn -> Sneeze.render([tag, %{}]) end
+      assert_raise ArgumentError, ~r/invalid tag name/, fn -> Sneeze.render([tag, %{}, "x"]) end
+    end
+
+    # string and other non-atom tags are only recognised when followed by an
+    # attribute map
+    for tag <- ["", "p onclick=alert(1)", 1, {:p}] do
+      assert_raise ArgumentError, ~r/invalid tag name/, fn -> Sneeze.render([tag, %{}, "x"]) end
+    end
+  end
+
+  test "tag shorthand with classes before the id raises" do
+    assert_raise ArgumentError, ~r/the id must come before classes/, fn ->
+      Sneeze.render([:"div.a#b"])
+    end
+  end
+
+  test "unusual but valid tag names are allowed" do
+    for tag <- [:"my-element", :"svg:rect", :foreignObject, :"x-ünï", :H1] do
+      assert Sneeze.render([tag, "x"]) == "<#{tag}>x</#{tag}>"
+    end
+  end
+
+  test "enumerable children are rendered like lists" do
+    assert Sneeze.render([:ul, Stream.map(1..2, &[:li, &1])]) == "<ul><li>1</li><li>2</li></ul>"
+    assert Sneeze.render([:p, 1..3]) == "<p>123</p>"
+    assert Sneeze.render([:p, %{}, "a", 1..2]) == "<p>a12</p>"
+
+    stream = Stream.unfold(1, fn n -> if n <= 2, do: {[:i, n], n + 1} end)
+    assert Sneeze.render([:p, stream]) == "<p><i>1</i><i>2</i></p>"
+
+    assert Sneeze.render(Stream.map(["<", ">"], & &1)) == "&lt;&gt;"
+  end
+
+  test "non-enumerable struct children are stringified" do
+    assert Sneeze.render([:p, URI.parse("https://x.test/?a=1&b=2")]) ==
+             "<p>https://x.test/?a=1&amp;b=2</p>"
   end
 
   test "render_iodata, empty data" do

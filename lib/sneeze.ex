@@ -1,6 +1,9 @@
 defmodule Sneeze do
   alias Sneeze.Internal
 
+  # Structs are maps, but are never attributes (they may be enumerable children)
+  defguardp is_attributes(term) when is_map(term) and not is_struct(term)
+
   @doc ~s"""
   Render a data-structure, containing 'elements' to html.
   An element is either:
@@ -8,20 +11,26 @@ defmodule Sneeze do
   - [tag, attribute_map]
   - [tag | body]
   - [tag]
-  - [:@__raw_html, html_string]
-  - [:script, attribute_map, script_text]
-  - [:script, script_text]
-  - [:style, attribute_map, style_text]
-  - [:style, style_text]
+  - [:__@raw_html, html_string]
   - A bare, stringable value (such as a string or number)
-  - A list of elements
+  - A list of elements, or another enumerable such as a stream or range
 
-  The content of `:__@raw_html`, `:style` and `:script` elements will not be escaped.
-  All other elements content will be html-escaped.
+  A tag may use Hiccup-style shorthand for its id and classes:
+  `:"div#main.wide.dark"` renders as `<div class="wide dark" id="main">`.
+  An `:id` in the attribute map takes precedence over the shorthand id, and
+  shorthand classes come before any `:class` in the attribute map. Invalid tag
+  names raise an `ArgumentError`.
+
+  The content of `:__@raw_html` elements will not be escaped. All other content
+  is html-escaped, including the content of `:script` and `:style` elements, so
+  wrap trusted scripts and styles in `:__@raw_html`:
+  `[:script, [:__@raw_html, "console.log(42 < 9);"]]`.
 
   Attribute values are html-escaped. A `true` value repeats the attribute name
   (`disabled="disabled"`), and a `false` or `nil` value omits the attribute.
-  Invalid attribute names raise an `ArgumentError`.
+  Lists are joined with spaces (`class: ["a", "b"]` renders `class="a b"`), and
+  maps are rendered as styles (`style: %{color: "red"}` renders
+  `style="color:red;"`). Invalid attribute names raise an `ArgumentError`.
 
   Examples:
   ```
@@ -32,7 +41,8 @@ defmodule Sneeze do
           [:li, [:a, %{href: "/"},      "Home"]],
           [:li, [:a, %{href: "/about"}, "About"]]])
   render([:__@raw_html, "<!DOCTYPE html>"])
-  render([:script, "console.log(42 < 9);"])
+  render([:script, [:__@raw_html, "console.log(42 < 9);"]])
+  render([:"ul#nav.menu", Stream.map(["a", "b"], &[:li, &1])])
   ```
   """
   def render(data) do
@@ -66,71 +76,57 @@ defmodule Sneeze do
 
       # list with tag
       [tag] when is_atom(tag) ->
-        if Internal.is_void_tag?(tag) do
-          [Internal.render_void_tag(tag)]
+        {name, attributes} = Internal.resolve_tag(tag, nil)
+
+        if Internal.is_void_tag?(name) do
+          [void_tag(name, attributes)]
         else
-          [Internal.render_tag(tag)]
+          [empty_tag(name, attributes)]
         end
 
-      # script tags
-      [:script, attributes, script_body] when is_map(attributes) ->
-        [
-          Internal.render_opening_tag(:script, attributes),
-          script_body,
-          Internal.render_closing_tag(:script)
-        ]
-
-      [:script, script_body] ->
-        [Internal.render_opening_tag(:script), script_body, Internal.render_closing_tag(:script)]
-
-      # style tags
-      [:style, attributes, style_body] when is_map(attributes) ->
-        [
-          Internal.render_opening_tag(:style, attributes),
-          style_body,
-          Internal.render_closing_tag(:style)
-        ]
-
-      [:style, style_body] ->
-        [Internal.render_opening_tag(:style), style_body, Internal.render_closing_tag(:style)]
-
       # list with tag and attribute map
-      [tag, attributes] when is_atom(tag) and is_map(attributes) ->
-        if Internal.is_void_tag?(tag) do
-          [Internal.render_void_tag(tag, attributes)]
+      [tag, attributes] when is_atom(tag) and is_attributes(attributes) ->
+        {name, attributes} = Internal.resolve_tag(tag, attributes)
+
+        if Internal.is_void_tag?(name) do
+          [Internal.render_void_tag(name, attributes)]
         else
-          [Internal.render_tag(tag, attributes)]
+          [Internal.render_tag(name, attributes)]
         end
 
       [:__@raw_html, html_string] ->
         [html_string]
 
       # list with tag, attribute map and child nodes
-      [tag, attributes | body] when is_map(attributes) ->
-        if Internal.is_void_tag?(tag) do
+      [tag, attributes | body] when is_attributes(attributes) ->
+        {name, attributes} = Internal.resolve_tag(tag, attributes)
+
+        if Internal.is_void_tag?(name) do
           [
-            Internal.render_void_tag(tag, attributes),
+            Internal.render_void_tag(name, attributes),
             # not actually body, next elements
             _render(body)
           ]
         else
           [
-            Internal.render_opening_tag(tag, attributes),
+            Internal.render_opening_tag(name, attributes),
             _render_body(body),
-            Internal.render_closing_tag(tag)
+            Internal.render_closing_tag(name)
           ]
         end
 
       # list with tag and child nodes
       [tag | body] when is_atom(tag) ->
-        if Internal.is_void_tag?(tag) do
+        {name, attributes} = Internal.resolve_tag(tag, nil)
+
+        if Internal.is_void_tag?(name) do
           [
-            Internal.render_void_tag(tag),
+            void_tag(name, attributes),
             # not actually body, next elements
             _render_body(body)
           ]
         else
-          [Internal.render_opening_tag(tag), _render_body(body), Internal.render_closing_tag(tag)]
+          [opening_tag(name, attributes), _render_body(body), Internal.render_closing_tag(name)]
         end
 
       # list with list of child nodes
@@ -143,11 +139,11 @@ defmodule Sneeze do
 
       # list with single, stringible member
       [something] ->
-        [to_string(something) |> Internal.escape()]
+        [render_bare_node(something)]
 
       # any non-list node
       bare_node ->
-        [to_string(bare_node) |> Internal.escape()]
+        [render_bare_node(bare_node)]
     end
   end
 
@@ -155,4 +151,25 @@ defmodule Sneeze do
     body_elements
     |> Enum.map(&_render/1)
   end
+
+  # Streams, ranges and other non-list enumerables are rendered like a list of
+  # nodes, as Hiccup does with lazy sequences.
+  defp render_bare_node(node) when is_struct(node) or is_function(node, 2) do
+    if Enumerable.impl_for(node) do
+      Enum.map(node, &_render/1)
+    else
+      to_string(node) |> Internal.escape()
+    end
+  end
+
+  defp render_bare_node(node), do: to_string(node) |> Internal.escape()
+
+  defp void_tag(name, nil), do: Internal.render_void_tag(name)
+  defp void_tag(name, attributes), do: Internal.render_void_tag(name, attributes)
+
+  defp empty_tag(name, nil), do: Internal.render_tag(name)
+  defp empty_tag(name, attributes), do: Internal.render_tag(name, attributes)
+
+  defp opening_tag(name, nil), do: Internal.render_opening_tag(name)
+  defp opening_tag(name, attributes), do: Internal.render_opening_tag(name, attributes)
 end
