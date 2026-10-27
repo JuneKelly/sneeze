@@ -107,7 +107,8 @@ defmodule Sneeze.Internal do
         raise ArgumentError, "invalid tag, the id must come before classes: #{inspect(tag)}"
 
       id_index && class_index ->
-        {binary_part(tag, 0, id_index), binary_part(tag, id_index + 1, class_index - id_index - 1),
+        {binary_part(tag, 0, id_index),
+         binary_part(tag, id_index + 1, class_index - id_index - 1),
          shorthand_classes(tag, class_index)}
 
       id_index ->

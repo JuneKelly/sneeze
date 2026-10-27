@@ -268,7 +268,9 @@ defmodule SneezeTest do
     assert Sneeze.render([:"p.a", %{class: ["b", nil, :c]}]) == "<p class=\"a b c\"></p>"
     assert Sneeze.render([:"p.a", %{class: nil}]) == "<p class=\"a\"></p>"
     assert Sneeze.render([:"p.a", %{class: false}]) == "<p class=\"a\"></p>"
-    assert Sneeze.render([:"p#s.a", %{"id" => "m", "class" => "b"}]) == "<p class=\"a b\" id=\"m\"></p>"
+
+    assert Sneeze.render([:"p#s.a", %{"id" => "m", "class" => "b"}]) ==
+             "<p class=\"a b\" id=\"m\"></p>"
   end
 
   test "tag shorthand values are escaped" do
@@ -323,6 +325,19 @@ defmodule SneezeTest do
     assert Sneeze.render([:p, stream]) == "<p><i>1</i><i>2</i></p>"
 
     assert Sneeze.render(Stream.map(["<", ">"], & &1)) == "&lt;&gt;"
+  end
+
+  test "enumerable nodes within sibling lists" do
+    assert Sneeze.render([Stream.map(1..2, &[:li, &1]), [:p, "tail"]]) ==
+             "<li>1</li><li>2</li><p>tail</p>"
+
+    assert Sneeze.render([1..2, [:p, "tail"]]) == "12<p>tail</p>"
+    assert Sneeze.render([[:p, "a"], 1..2, [:p, "b"]]) == "<p>a</p>12<p>b</p>"
+    assert Sneeze.render([Stream.map(["<", ">"], & &1), [:p, "x"]]) == "&lt;&gt;<p>x</p>"
+    assert Sneeze.render([Stream.map([], & &1), [:p, "x"]]) == "<p>x</p>"
+
+    assert Sneeze.render([URI.parse("https://x.test/?a=1&b=2"), [:p, "x"]]) ==
+             "https://x.test/?a=1&amp;b=2<p>x</p>"
   end
 
   test "non-enumerable struct children are stringified" do

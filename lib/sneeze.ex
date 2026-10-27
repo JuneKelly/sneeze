@@ -137,6 +137,10 @@ defmodule Sneeze do
       [node | rest] when is_list(node) ->
         [_render(node), _render(rest)]
 
+      # list with enumerable (stream, range) or stringible struct as first element
+      [node | rest] when is_struct(node) or is_function(node, 2) ->
+        [render_bare_node(node), _render(rest)]
+
       # list with single, stringible member
       [something] ->
         [render_bare_node(something)]
